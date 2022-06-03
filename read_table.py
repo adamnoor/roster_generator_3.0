@@ -3,6 +3,9 @@ import csv
 import os
 from datetime import datetime
 
+
+#Global Variables
+
 conn = None
 cur = None
 current_rosters = []
@@ -15,6 +18,9 @@ min_projection = 0
 max_projection = 1.0
 min_budget = 0.0
 max_budget = 50000
+
+
+#Functions
 
 def initialize_current_table():
     global current_players_array

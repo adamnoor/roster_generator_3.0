@@ -1,6 +1,4 @@
 import sqlite3
-from decimal import *
-from unicodedata import decimal
 import csv
 import os
 from datetime import datetime
@@ -35,10 +33,6 @@ def initialize_current_table():
     if not os.path.exists(newpath):
         os.makedirs(newpath)
 
-   
-
-
-    
     current_rosters = []
     current_players_array = []
     number_of_rosters = 0
@@ -51,13 +45,10 @@ def initialize_current_table():
     conn = sqlite3.connect('football.sqlite')
     cur = conn.cursor()
     
-
-
     print("")
     print("Initializing a local table.  This may take some time...")
     cur.execute('DROP TABLE IF EXISTS current')
     cur.execute('DROP TABLE IF EXISTS included_players')
-
     cur.execute("CREATE TABLE current AS SELECT * FROM rosters").fetchall()
     cur.execute('''
     CREATE TABLE included_players (
@@ -69,6 +60,7 @@ def initialize_current_table():
     current_players_array = []
 
     get_player()
+
 
 def set_up_values():
     global min_projection
@@ -126,7 +118,6 @@ def get_player():
     fx = conn.execute("SELECT DISTINCT fx FROM current").fetchall()
     dst = conn.execute("SELECT DISTINCT dst FROM current").fetchall()
 
-    
     for element in qb:
         if element not in players:
             players.append(element[0])
@@ -168,8 +159,6 @@ def get_player():
     
     if len(res)>0:
         current_players_array = res
-
-        
 
 
 def get_selected_player(state):
@@ -238,9 +227,9 @@ def exclude_player_restriction():
     conn.commit()
     print("you are trying to exclude " + str(excluded_players[len(excluded_players)-1][0]))
 
-
     implement_filter('exclude')
     user_choice()
+
 
 def projection_restriction():
     global min_projection
@@ -257,6 +246,7 @@ def projection_restriction():
     
     implement_filter("projection")
     user_choice()
+
 
 def budget_restriction():
     global min_budget
@@ -300,13 +290,10 @@ def implement_filter(state):
     
     select_statement = "WITH t AS (" + select_statement + ") SELECT qb, rb1, rb2, wr1, wr2, wr3, te, fx, dst, budget, projection FROM t"
    
-
-    
     all_rosters = cur.execute(select_statement).fetchall()
+    
     if len(all_rosters) > 0:
-
         cur.execute('DROP TABLE IF EXISTS current')
-
         cur.execute('''
         CREATE TABLE current (
             "id" INTEGER PRIMARY KEY,
@@ -325,9 +312,6 @@ def implement_filter(state):
         ''')
 
         insert_records = "INSERT INTO current (qb, rb1, rb2, wr1, wr2, wr3, te, fx, dst, budget, projection) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-
-
-       
         cur.executemany(insert_records, all_rosters)
         conn.commit()
        
@@ -336,11 +320,13 @@ def implement_filter(state):
             for element in included_players:
                 print(element[0])
             print("")
+
         if len(excluded_players) > 0:
             print("The following players have been excluded from all rosters:")
             for element in excluded_players:
                 print(element[0])
             print("")
+
     else:
         if state == "exclude":
             excluded_players.pop()
@@ -353,6 +339,7 @@ def write_stack():
     cursor = conn.cursor()
     cursor.execute("SELECT * from current ORDER BY projection DESC")
     path = "output_files/Final_Roster_" + str(now) + ".csv"
+
     with open(path, "w") as csv_file:
         csv_writer = csv.writer(csv_file, delimiter=",")
         csv_writer.writerow([i[0] for i in cursor.description])
@@ -363,7 +350,6 @@ def write_stack():
 
 
 def user_choice():
-    
     user_input = restrict_players()
     if user_input == 0:
         include_player_restriction()
@@ -393,13 +379,7 @@ def user_choice():
         print("The program has terminated")
 
 
-
-
 def run_script():
     initialize_current_table()
     set_up_values()
     user_choice()
-
-
-#run_script()
-

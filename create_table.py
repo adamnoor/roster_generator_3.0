@@ -1,10 +1,8 @@
 import sqlite3
-
 from models import *
 import csv
 import time
 from itertools import combinations
-import sqlite3
 import os
 
 
@@ -41,7 +39,6 @@ cur = None
 
 def read_csv_files():
     
-
     with open('input_files/players.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
@@ -103,7 +100,8 @@ def read_csv_files():
                     print("check the position for " + name)
                     
             line_count += 1
- 
+
+
 def check_for_zero_projection():
     print("")
     print("The following players are on the players.csv file but cannot be found on the projections.csv file")
@@ -116,7 +114,6 @@ def check_for_zero_projection():
     print("Press 2 to quit this program and correct this issue")
     print("")
     return int(input("Enter Selection: "))
-
 
 
 def set_combos():
@@ -238,15 +235,17 @@ def create_player_combos():
     print(str(end - start) + " seconds to sort all of the combos")
     print("Generating valid rosters...")
 
+
 def write_rosters():
 
     global conn
     global cur
+    global roster_tally
+    global overall_runtime
 
     newpath = r'generated_files' 
     if not os.path.exists(newpath):
         os.makedirs(newpath)
-
 
     conn = sqlite3.connect('football.sqlite')
     cur = conn.cursor()
@@ -269,13 +268,8 @@ def write_rosters():
     )
     ''')
 
-
-    global roster_tally
-    global overall_runtime
-
     count = 0
-    
-    
+        
     print ("")
     print("Generating valid rosters for all rosters.  This may take some time...")
     all_rosters = []
@@ -368,7 +362,6 @@ def tally_players():
     salary_data_sorted = sorted(salary_data, key=lambda x: x[2], reverse=True)
     proj_data_sorted = sorted(proj_data, key=lambda x: x[0], reverse=True)
 
-   
     with open('generated_files/player_breakdown.csv', 'w') as f:
         writer = csv.writer(f)
 
@@ -409,12 +402,8 @@ def run_create():
             create_player_combos()
             write_rosters()
             tally_players()
-
         else:
             print("the create rosters script has terminated")
     else:
         print("The create rosters script has terminated")
-
-
-#run_create()
 

@@ -114,57 +114,33 @@ def restrict_players():
 def get_player():
     global current_players_array
     players = []
-    qb = conn.execute("SELECT DISTINCT qb FROM current").fetchall()
-    rb1 = conn.execute("SELECT DISTINCT rb1 FROM current").fetchall()
-    rb2 = conn.execute("SELECT DISTINCT rb2 FROM current").fetchall()
-    wr1 = conn.execute("SELECT DISTINCT wr1 FROM current").fetchall()
-    wr2 = conn.execute("SELECT DISTINCT wr2 FROM current").fetchall()
-    wr3 = conn.execute("SELECT DISTINCT wr2 FROM current").fetchall()
-    te = conn.execute("SELECT DISTINCT te FROM current").fetchall()
-    fx = conn.execute("SELECT DISTINCT fx FROM current").fetchall()
-    dst = conn.execute("SELECT DISTINCT dst FROM current").fetchall()
+    jn = conn.execute('''
 
-    for element in qb:
-        if element not in players:
-            players.append(element[0])
+        SELECT DISTINCT qb FROM current
+            UNION
+        SELECT DISTINCT rb1 FROM current
+            UNION 
+        SELECT DISTINCT rb2 FROM current
+            UNION 
+        SELECT DISTINCT wr1 FROM current
+            UNION 
+        SELECT DISTINCT wr2 FROM current
+            UNION 
+        SELECT DISTINCT wr3 FROM current
+            UNION 
+        SELECT DISTINCT te FROM current
+            UNION 
+        SELECT DISTINCT fx FROM current
+            UNION 
+        SELECT DISTINCT dst FROM current
+
+    ''')
+
+    for element in jn:
+        players.append(element[0])
     
-    for element in rb1:
-        if element not in players:
-            players.append(element[0])
-    
-    for element in rb2:
-        if element not in players:
-            players.append(element[0])
-    
-    for element in wr1:
-        if element not in players:
-            players.append(element[0])
-    
-    for element in wr2:
-        if element not in players:
-            players.append(element[0])
-    
-    for element in wr3:
-        if element not in players:
-            players.append(element[0])
-    
-    for element in te:
-        if element not in players:
-            players.append(element[0])
-    
-    for element in fx:
-        if element not in players:
-            players.append(element[0])
-    
-    for element in dst:
-        if element not in players:
-            players.append(element[0])
-    
-    res = []
-    [res.append(x) for x in players if x not in res]  
-    
-    if len(res)>0:
-        current_players_array = res
+    if len(players)>0:
+        current_players_array = players
 
 
 def get_selected_player(state):

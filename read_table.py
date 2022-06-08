@@ -94,7 +94,7 @@ def restrict_players():
     print("")
     print("There are " + str(number_of_rosters) + " rosters")
     print("The highest projection score is " + str(max_projection))
-    print("The lowhest projection score is " + str(min_projection))
+    print("The lowest projection score is " + str(min_projection))
     print("The highest budget is " + str(max_budget))
     print("The lowest budget is " + str(min_budget))
     print("")
@@ -328,7 +328,7 @@ def write_stack():
         csv_writer.writerows(cursor)
 
     dirpath = os.getcwd() + "/" + path
-    print ("Data exported Successfully into {}".format(dirpath))
+    print ("CSV file containing this stack was successfully written to {}".format(path))
 
 
 def user_choice():
@@ -343,11 +343,9 @@ def user_choice():
         budget_restriction()
     elif user_input == 4:
         write_stack()
-        print("The stack has been written")
         run_script()
     elif user_input == 5:
         write_stack()
-        print("The stack has been written")
         print("")
         print("Cleaning out the empty space in the database...")
         cur.execute('DROP TABLE IF EXISTS current')

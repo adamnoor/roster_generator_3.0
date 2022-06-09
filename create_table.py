@@ -298,6 +298,10 @@ def write_rosters():
                 break
             else:
                 count += 1
+                if count >= 1000000 and count %1000000 == 0:
+                    print(str(count) + " valid rosters have been generated so far")
+                    end = time.time()
+                    print(str(end - start) + " seconds of running time...")
                 
                 roster = [i.qb.name, j.rb1.name, j.rb2.name, j.wr1.name, j.wr2.name, j.wr3.name, j.te.name, j.fx.name, i.dst.name, salary, projection]
                 roster_tally += 1

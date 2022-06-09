@@ -280,15 +280,24 @@ def write_rosters():
             salary = i.salary + j.salary
             projection = round(i.projection + j.projection, 2)
             if salary > 50000:
+                print(str(count) + " valid rosters have been generated so far")
+                end = time.time()
+                print(str(end - start) + " seconds of running time...")
+                print(str(len(all_rosters)) + " valid rosters with the qb of " + i.qb.name + " and a defense/special teams of " + i.dst.name + " have been created and are being written to the database")
+                
+                # SQL query to insert data into the
+                # person table
+                insert_records = "INSERT INTO rosters (qb, rb1, rb2, wr1, wr2, wr3, te, fx, dst, budget, projection) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                
+                # Importing the contents of the file
+                # into our person table
+                cur.executemany(insert_records, all_rosters)
+                conn.commit()
+                
+                all_rosters = []
                 break
             else:
                 count += 1
-                if count >= 1000000 and count %1000000 == 0:
-                    print(str(count) + " valid rosters have been generated so far")
-                    end = time.time()
-                    print(str(end - start) + " seconds of running time...")
-                    
-                
                 
                 roster = [i.qb.name, j.rb1.name, j.rb2.name, j.wr1.name, j.wr2.name, j.wr3.name, j.te.name, j.fx.name, i.dst.name, salary, projection]
                 roster_tally += 1
@@ -300,25 +309,29 @@ def write_rosters():
                     else:
                         player_map[element] += 1
                 all_rosters.append(roster)
+                if j == flex_combos[len(flex_combos)-1]:
+                    print(str(count) + " valid rosters have been generated so far")
+                    end = time.time()
+                    print(str(end - start) + " seconds of running time...")
+                    print(str(len(all_rosters)) + " valid rosters with the qb of " + i.qb.name + " and a defense/special teams of " + i.dst.name + " have been created and are being written to the database")
+                    
+                    # SQL query to insert data into the
+                    # person table
+                    insert_records = "INSERT INTO rosters (qb, rb1, rb2, wr1, wr2, wr3, te, fx, dst, budget, projection) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                    
+                    # Importing the contents of the file
+                    # into our person table
+                    cur.executemany(insert_records, all_rosters)
+                    conn.commit()
+                    
+                    all_rosters = []
             
-    print(str(len(all_rosters)) + " rosters have been generated")  
-    print("Writing all the valid rosters to a database")
+    print(str(count) + " valid rosters have been generated and written to the database")  
     print("")
 
  
-    # SQL query to insert data into the
-    # person table
-    insert_records = "INSERT INTO rosters (qb, rb1, rb2, wr1, wr2, wr3, te, fx, dst, budget, projection) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-    
-    # Importing the contents of the file
-    # into our person table
-    cur.executemany(insert_records, all_rosters)
-    conn.commit()
-
-   
-
     end = time.time()
-    print(str(end - start) + " seconds to generate " + str(len(all_rosters)) + " rosters")
+    print(str(end - start) + " seconds to generate " + str(count) + " rosters")
     overall_runtime += end - start
     
 

@@ -1,6 +1,6 @@
 import os.path
 from read_table import run_script
-from create_table import run_create
+from logic_create_db import run_create
 
 path = os.path.exists('football.sqlite')
 

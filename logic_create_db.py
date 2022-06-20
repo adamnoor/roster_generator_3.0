@@ -88,8 +88,20 @@ def set_flex_combos(plyrs, num):
     
     return list(combinations(plyrs, num))
 
-def sort_list_combos(list):
+def sort_one(list):
+    return  sorted(list, key=lambda x: x.salary)
+
+def sort_two(list):
     return  sorted(list, key=lambda x: x[0].salary + x[1].salary)
+
+def sort_three(list):
+    return  sorted(list, key=lambda x: x[0].salary + x[1].salary + x[2].salary)
+
+def sort_four(list):
+    return  sorted(list, key=lambda x: x[0].salary + x[1].salary + x[2].salary + x[3].salary)
+
+
+
 
 def max_combos(qb_dst, rb2, rb3, wr3, wr4, te, te2):
     print("Done calculating the necessary combinations needed to create all of the rosters")
@@ -107,11 +119,11 @@ def max_combos(qb_dst, rb2, rb3, wr3, wr4, te, te2):
     return int(input("Enter Selection: "))
 
 def create_all_flex_combos(two_rb_combos, three_wr_combos, two_te_combos, three_rb_combos, tight_ends, four_wr_combos, flex_max):
-    flex_combos_unsorted = []
+    flex_combos = []
    
     count = 0
     print("")
-    print("Creating positional combinations...")
+    print("Creating flex combinations...")
     print("")
     for rb in two_rb_combos:
         for wr in three_wr_combos:
@@ -122,7 +134,7 @@ def create_all_flex_combos(two_rb_combos, three_wr_combos, two_te_combos, three_
                     if count >= 1000000 and count % 1000000 == 0:
                         print(str(count) + " two te flex combinations have been created.")
                     count += 1
-                    flex_combos_unsorted.append(FlexCombo(rb[0], rb[1], wr[0], wr[1], wr[2], te[0], te[1]))
+                    flex_combos.append(FlexCombo(rb[0], rb[1], wr[0], wr[1], wr[2], te[0], te[1]))
                 else:
                     break
     print(str(count) + " two te flex combinations have been created.")
@@ -135,7 +147,7 @@ def create_all_flex_combos(two_rb_combos, three_wr_combos, two_te_combos, three_
                     count += 1
                     if count >= 1000000 and count % 1000000 == 0:
                         print(str(count) + " three rb flex combinations have been created.")
-                    flex_combos_unsorted.append(FlexCombo(rb[0], rb[1], wr[0], wr[1], wr[2], te, rb[2]))
+                    flex_combos.append(FlexCombo(rb[0], rb[1], wr[0], wr[1], wr[2], te, rb[2]))
                 else:
                     break
     print(str(count) + " three rb flex combinations have been created.")
@@ -150,16 +162,16 @@ def create_all_flex_combos(two_rb_combos, three_wr_combos, two_te_combos, three_
                     if count >= 1000000 and count % 1000000 == 0:
                         print(str(count) + " four wr flex combinations have been created.")
                     
-                    flex_combos_unsorted.append(FlexCombo(rb[0], rb[1], wr[0], wr[1], wr[2], te, wr[3]))  
+                    flex_combos.append(FlexCombo(rb[0], rb[1], wr[0], wr[1], wr[2], te, wr[3]))  
                 else:
                     break
 
     print(str(count) + " four wr flex combinations have been created.")
     count = 0
 
-    print("Sorting " + str(len(flex_combos_unsorted)) + " combinations.  This may take some time...")
+    print("Sorting " + str(len(flex_combos)) + " combinations.  This may take some time...")
     
-    flex_combos = sorted(flex_combos_unsorted, key=lambda x: x.salary)
+    flex_combos = sorted(flex_combos, key=lambda x: x.salary)
 
     print("")
     print("Done Sorting")
@@ -167,41 +179,6 @@ def create_all_flex_combos(two_rb_combos, three_wr_combos, two_te_combos, three_
     print("Generating valid rosters...")
 
     return flex_combos
-
-
-def create_table():
-    
-    newpath = r'generated_files' 
-    if not os.path.exists(newpath):
-        os.makedirs(newpath)
-
-    conn = sqlite3.connect('football.sqlite')
-    cur = conn.cursor()
-
-    cur.execute('DROP TABLE IF EXISTS rosters')
-    cur.execute('''
-    CREATE TABLE rosters (
-        "id" INTEGER PRIMARY KEY,
-        "qb" TEXT,
-        "rb1" TEXT,
-        "rb2" TEXT,
-        "wr1" TEXT,
-        "wr2" TEXT,
-        "wr3" TEXT,
-        "te" TEXT,
-        "fx" TEXT,
-        "dst" TEXT,
-        "budget" REAL,
-        "projection" REAL
-    )
-    ''')
-
-    count = 0
-        
-    print ("")
-    print("Generating valid rosters for all rosters.  This may take some time...")
-
-
 
 
 def write_combos(qb_dst, flex):
@@ -246,7 +223,7 @@ def write_combos(qb_dst, flex):
 
 
 
-def new_tables():
+def build_tables():
     conn = sqlite3.connect('football.sqlite')
     cur = conn.cursor()
     cur.execute('DROP TABLE IF EXISTS rosters')
@@ -268,7 +245,7 @@ def new_tables():
             CROSS JOIN qb_dst
             WHERE qb_dst.budget + flex.budget <= 50000
             ''')
-    print("Combos Done")
+    print("All valid rosters have been written to the database.")
 
 
 def write_to_database(qb_dst_combos, flex_combos):
@@ -405,7 +382,7 @@ def run_create():
     all_players = get_all_projections(all_players)
     if find_zero_projection(all_players) == 2:
         print("The program has terminated so that you may adjust the projections")
-        return None
+        return False
     wide_recievers = set_postions("WR", all_players)
     runningbacks = set_postions("RB", all_players)
     quarterbacks = set_postions("QB", all_players)
@@ -419,28 +396,38 @@ def run_create():
     three_wr_combos = set_flex_combos(wide_recievers, 3)
     four_wr_combos = set_flex_combos(wide_recievers, 4)
     two_te_combos = set_flex_combos(tight_ends, 2)
-    two_te_combos = sort_list_combos(two_te_combos)
+    
     if max_combos(qb_dst_combos, two_rb_combos, three_rb_combos, three_wr_combos, four_wr_combos, tight_ends, two_te_combos) == 2:
         print("The program has ended so that you may reduce the number of players considered for a roster")
-        return None
+        return False
     start = time.time()
+    print("Sorting positional combinations...")
+    print("")
+    two_rb_combos = sort_two(two_rb_combos)
+    three_rb_combos = sort_three(three_rb_combos)
+    three_wr_combos = sort_three(three_wr_combos)
+    four_wr_combos = sort_four(four_wr_combos)
+    two_te_combos = sort_two(two_te_combos)
+    tight_ends = sort_one(tight_ends)
+    print("Finished sorting positional combinations.")
+    print("")
+    flex_combo_end = time.time()
+    runtime = get_time(start, flex_combo_end)
+    print("The program has taken " + runtime + " seconds to sort all of the positional combinations")
+    print("")
+    print("Building the valid rosters...")
+    print("")
+
     flex_combos = create_all_flex_combos(two_rb_combos, three_wr_combos, two_te_combos, three_rb_combos, tight_ends, four_wr_combos, flex_max)
     flex_combo_end = time.time()
     runtime = get_time(start, flex_combo_end)
     print("The program has taken " + runtime + " seconds to build all of the flex combinations")
+    print("")
+    print("Writing all of the combinations to a database.  This may take some time...")
     write_combos(qb_dst_combos, flex_combos)
-    new_tables()
-    #create_table()
-    # db_obj = write_to_database(qb_dst_combos, flex_combos)
-    db_write_end = time.time()
-    print("The program has taken " + get_time(flex_combo_end, db_write_end) + " to write all of the rosters to the database")
-    # print("")
-    # player_map = db_obj[0]
-    # roster_tally = db_obj[1]
-    # tally_players(player_map, roster_tally)
-    # end = time.time()
-    # print("")
-    # print("The program has taken " + get_time(start, end) + " to complete")
-
-
-   
+    build_tables()
+    end = time.time()
+    print("")
+    print("The program has taken " + get_time(start, end) + " seconds to complete")
+    
+    return True

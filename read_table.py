@@ -363,3 +363,4 @@ def run_script():
     initialize_current_table()
     set_up_values()
     user_choice()
+    return True

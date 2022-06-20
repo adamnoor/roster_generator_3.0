@@ -58,7 +58,7 @@ def initialize_current_table():
     cur.execute("CREATE TABLE current AS SELECT * FROM rosters").fetchall()
     cur.execute('''
     CREATE TABLE included_players (
-        "id" INTEGER PRIMARY KEY,
+        
         "name" TEXT
     )
     ''')
@@ -175,7 +175,7 @@ def include_player_restriction():
     cur.execute('DROP TABLE IF EXISTS included_players')
     cur.execute('''
     CREATE TABLE included_players (
-        "id" INTEGER PRIMARY KEY,
+        
         "name" TEXT
     )
     ''')
@@ -198,7 +198,7 @@ def exclude_player_restriction():
     cur.execute('DROP TABLE IF EXISTS excluded_players')
     cur.execute('''
     CREATE TABLE excluded_players (
-        "id" INTEGER PRIMARY KEY,
+        
         "name" TEXT
     )
     ''')
@@ -257,7 +257,7 @@ def implement_filter(state):
 
     select_statement = '''
     SELECT 
-    id, qb, rb1, rb2, wr1, wr2, wr3, te, fx, dst, budget, projection 
+    qb, rb1, rb2, wr1, wr2, wr3, te, fx, dst, budget, projection 
     FROM current
     WHERE budget >= '''  + str(min_budget) + ''' AND budget <= ''' + str(max_budget) + ''' AND projection >= ''' + str(min_projection) + ''' AND projection <= ''' + str(max_projection) + ''' 
     '''
@@ -278,7 +278,7 @@ def implement_filter(state):
         cur.execute('DROP TABLE IF EXISTS current')
         cur.execute('''
         CREATE TABLE current (
-            "id" INTEGER PRIMARY KEY,
+            
             "qb" TEXT,
             "rb1" TEXT,
             "rb2" TEXT,

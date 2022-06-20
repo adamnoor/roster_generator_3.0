@@ -1,5 +1,5 @@
 import sqlite3
-from create_table import set_combos
+from deprecated.create_table import set_combos
 from models import *
 import csv
 import time

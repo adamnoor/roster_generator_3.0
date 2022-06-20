@@ -88,6 +88,8 @@ def set_flex_combos(plyrs, num):
     
     return list(combinations(plyrs, num))
 
+def sort_list_combos(list):
+    return  sorted(list, key=lambda x: x[0].salary + x[1].salary)
 
 def max_combos(qb_dst, rb2, rb3, wr3, wr4, te, te2):
     print("Done calculating the necessary combinations needed to create all of the rosters")
@@ -111,7 +113,6 @@ def create_all_flex_combos(two_rb_combos, three_wr_combos, two_te_combos, three_
     print("")
     print("Creating positional combinations...")
     print("")
-    
     for rb in two_rb_combos:
         for wr in three_wr_combos:
             for te in two_te_combos:
@@ -199,6 +200,75 @@ def create_table():
         
     print ("")
     print("Generating valid rosters for all rosters.  This may take some time...")
+
+
+
+
+def write_combos(qb_dst, flex):
+    qb_dst_array = []
+    flex_array = []
+    conn = sqlite3.connect('football.sqlite')
+    cur = conn.cursor()
+    cur.execute('DROP TABLE IF EXISTS qb_dst')
+    cur.execute('''
+    CREATE TABLE qb_dst (
+        "qb" TEXT,
+        "dst" TEXT,
+        "budget" REAL,
+        "projection" REAL
+    )
+    ''')
+    insert_records = "INSERT INTO qb_dst (qb, dst, budget, projection) VALUES(?, ?, ?, ?)"
+    for element in qb_dst:
+        qb_dst_array.append([element.qb.name, element.dst.name, element.salary, element.projection])
+    cur.executemany(insert_records, qb_dst_array)
+    conn.commit()
+
+    cur.execute('DROP TABLE IF EXISTS flex')
+    cur.execute('''
+    CREATE TABLE flex (
+        "rb1" TEXT,
+        "rb2" TEXT,
+        "wr1" TEXT,
+        "wr2" TEXT,
+        "wr3" TEXT,
+        "te" TEXT,
+        "fx" TEXT,
+        "budget" REAL,
+        "projection" REAL
+    )
+    ''')
+    insert_records = "INSERT INTO flex (rb1, rb2, wr1, wr2, wr3, te, fx, budget, projection) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    for element in flex:
+        flex_array.append([element.rb1.name, element.rb2.name, element.wr1.name, element.wr2.name, element.wr3.name, element.te.name, element.fx.name, element.salary, element.projection])
+    cur.executemany(insert_records, flex_array)
+    conn.commit()
+
+
+
+def new_tables():
+    conn = sqlite3.connect('football.sqlite')
+    cur = conn.cursor()
+    cur.execute('DROP TABLE IF EXISTS rosters')
+    cur.execute('''
+        CREATE TABLE rosters AS 
+            SELECT
+                qb,
+                rb1,
+                rb2, 
+                wr1, 
+                wr2, 
+                wr3, 
+                te, 
+                fx, 
+                dst,
+                qb_dst.budget + flex.budget AS budget,
+                qb_dst.projection + flex.projection AS projection
+            FROM flex 
+            CROSS JOIN qb_dst
+            WHERE qb_dst.budget + flex.budget <= 50000
+            ''')
+    print("Combos Done")
 
 
 def write_to_database(qb_dst_combos, flex_combos):
@@ -349,6 +419,7 @@ def run_create():
     three_wr_combos = set_flex_combos(wide_recievers, 3)
     four_wr_combos = set_flex_combos(wide_recievers, 4)
     two_te_combos = set_flex_combos(tight_ends, 2)
+    two_te_combos = sort_list_combos(two_te_combos)
     if max_combos(qb_dst_combos, two_rb_combos, three_rb_combos, three_wr_combos, four_wr_combos, tight_ends, two_te_combos) == 2:
         print("The program has ended so that you may reduce the number of players considered for a roster")
         return None
@@ -357,17 +428,19 @@ def run_create():
     flex_combo_end = time.time()
     runtime = get_time(start, flex_combo_end)
     print("The program has taken " + runtime + " seconds to build all of the flex combinations")
-    create_table()
-    db_obj = write_to_database(qb_dst_combos, flex_combos)
+    write_combos(qb_dst_combos, flex_combos)
+    new_tables()
+    #create_table()
+    # db_obj = write_to_database(qb_dst_combos, flex_combos)
     db_write_end = time.time()
     print("The program has taken " + get_time(flex_combo_end, db_write_end) + " to write all of the rosters to the database")
-    print("")
-    player_map = db_obj[0]
-    roster_tally = db_obj[1]
-    tally_players(player_map, roster_tally)
-    end = time.time()
-    print("")
-    print("The program has taken " + get_time(start, end) + " to complete")
+    # print("")
+    # player_map = db_obj[0]
+    # roster_tally = db_obj[1]
+    # tally_players(player_map, roster_tally)
+    # end = time.time()
+    # print("")
+    # print("The program has taken " + get_time(start, end) + " to complete")
 
 
    

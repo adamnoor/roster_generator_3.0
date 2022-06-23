@@ -130,79 +130,13 @@ def add_to_table(type, plyr_list):
     cur.executemany(insert_records, [plyr_list[len(plyr_list)-1]])
     conn.commit()
     print("you are trying to " + type + " " + str(plyr_list[len(plyr_list)-1][0]))
-    print("These are the players that must be " + type + "d: ", plyr_list)
-
-
-def exclude_player_restriction(plyr_list):
-    conn = sqlite3.connect('football.sqlite')
-    cur = conn.cursor()
-    print("Getting a list of players to exclude...")
-    cur.execute('DROP TABLE IF EXISTS excluded_players')
-    cur.execute('''
-    CREATE TABLE included_players (
-        
-        "name" TEXT
-    )
-    ''')
-
-    insert_records = "INSERT INTO excluded_players (name) VALUES(?)"
-    
-    cur.executemany(insert_records, [plyr_list[len(plyr_list)-1]])
-    conn.commit()
-    print("you are trying to exclude " + str(plyr_list[len(plyr_list)-1][0]))
-    print("These are the players that must be excluded: ", plyr_list)
-
-
-
-
-
-def test_filter(state, min_bud, max_bud, min_proj, max_proj, incl_plyrs, excl_plyrs):
-    conn = sqlite3.connect('football.sqlite')
-    cur = conn.cursor()
-
-    # select_statement = "SELECT * FROM current WHERE budget >= " + str(min_bud) 
-    # select_statement = "SELECT * FROM current WHERE budget <= " + str(max_bud) 
-    # select_statement = "SELECT * FROM current WHERE projection >= " + str(min_proj) 
-    # select_statement = "SELECT * FROM current WHERE projection <= " + str(max_proj) 
-    select_statement = "SELECT * FROM current WHERE projection <= " + str(max_proj + .01) 
-   
-    all_rosters = cur.execute(select_statement).fetchall()
-
-
-    if len(all_rosters) > 1:
-        cur.execute('DROP TABLE IF EXISTS current')
-        cur.execute('''
-        CREATE TABLE current (
-            
-            "qb" TEXT,
-            "rb1" TEXT,
-            "rb2" TEXT,
-            "wr1" TEXT,
-            "wr2" TEXT,
-            "wr3" TEXT,
-            "te" TEXT,
-            "fx" TEXT,
-            "dst" TEXT,
-            "budget" REAL,
-            "projection" REAL
-        )
-        ''')
-
-       
-        insert_records = "INSERT INTO current (qb, rb1, rb2, wr1, wr2, wr3, te, fx, dst, budget, projection) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-        cur.executemany(insert_records, all_rosters)
-        conn.commit()
-
-        print(max_proj)
-
-    return []
-
-
-
-
+    print("These are the players that must be " + type + "d: ")
+    for element in plyr_list:
+        print(element)
 
 
 def implement_filter(state, min_bud, max_bud, min_proj, max_proj, incl_plyrs, excl_plyrs):
+    max_proj += .001
     conn = sqlite3.connect('football.sqlite')
     cur = conn.cursor()
 
@@ -210,7 +144,7 @@ def implement_filter(state, min_bud, max_bud, min_proj, max_proj, incl_plyrs, ex
     SELECT 
     qb, rb1, rb2, wr1, wr2, wr3, te, fx, dst, budget, projection 
     FROM current
-    WHERE budget >= '''  + str(min_bud) + ''' AND budget <= ''' + str(max_bud) + ''' AND projection >= ''' + str(min_proj) + ''' AND projection <= ''' + str(max_proj + .01) + ''' 
+    WHERE budget >= '''  + str(min_bud) + ''' AND budget <= ''' + str(max_bud) + ''' AND projection >= ''' + str(min_proj) + ''' AND projection <= ''' + str(max_proj) + ''' 
     '''
 
     if len(incl_plyrs) > 0:
@@ -226,10 +160,6 @@ def implement_filter(state, min_bud, max_bud, min_proj, max_proj, incl_plyrs, ex
    
     all_rosters = cur.execute(select_statement).fetchall()
 
-    print(len(all_rosters))
-    print(all_rosters[0])
-    print(all_rosters[len(all_rosters)-1])
-    
     if len(all_rosters) > 1:
         cur.execute('DROP TABLE IF EXISTS current')
         cur.execute('''
@@ -308,8 +238,14 @@ def write_rosters_to_csv():
         csv_writer.writerows(cur)
 
         
-def clear_space():
-     print("Cleaning out the empty space in the database...")
+def clear_space(tables):
+    conn = sqlite3.connect('football.sqlite')
+    cur = conn.cursor()
+    print("Cleaning out the empty space in the database...")
+    for table in tables:
+        cur.execute('DROP TABLE IF EXISTS ' + table)
+        cur.execute('VACUUM')
+    print("The program has been ternminated")
 
 
 def run_read():
@@ -358,9 +294,9 @@ def run_read():
         elif user_input == "5":
             keep_running = False
             write_rosters_to_csv()
-            clear_space()
+            clear_space(["current", "included_players", "excluded_players"])
         else:
             keep_running = False
-            clear_space()
+            clear_space(["current", "included_players", "excluded_players"])
 
 run_read()

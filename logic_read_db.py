@@ -22,8 +22,7 @@ def run_read():
                 add_to_table("include", included_players)
                 included_players = implement_filter("include", min_budget, max_budget, min_projection, max_projection, included_players, excluded_players)
             else:
-                print(player + " is already included.  Let's try this again...")
-                print("")
+                already_included_message(player)
         elif user_input == "1":
             current_players = get_current_players(current_players)
             player = get_player_selection("exclude", current_players)

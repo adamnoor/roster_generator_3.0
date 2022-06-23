@@ -23,7 +23,6 @@ def run_create():
     three_wr_combos = set_flex_combos(wide_recievers, 3)
     four_wr_combos = set_flex_combos(wide_recievers, 4)
     two_te_combos = set_flex_combos(tight_ends, 2)
-    
     if max_combos(qb_dst_combos, two_rb_combos, three_rb_combos, three_wr_combos, four_wr_combos, tight_ends, two_te_combos) == 2:
         print("The program has ended so that you may reduce the number of players considered for a roster")
         return False
@@ -44,7 +43,6 @@ def run_create():
     print("")
     print("Building the valid rosters...")
     print("")
-
     flex_combos = create_all_flex_combos(two_rb_combos, three_wr_combos, two_te_combos, three_rb_combos, tight_ends, four_wr_combos, flex_max)
     flex_combo_end = time.time()
     runtime = get_time(start, flex_combo_end)

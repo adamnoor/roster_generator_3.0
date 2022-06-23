@@ -569,6 +569,9 @@ def implement_filter(state, min_bud, max_bud, min_proj, max_proj, incl_plyrs, ex
     else:
         return None
 
+def already_included_message(plyr):
+    print(plyr + " is already included.  Let's try this again...")
+    print("")
 
 def min_max_restriction(type, min, max):
     

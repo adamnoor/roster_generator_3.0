@@ -153,6 +153,55 @@ def exclude_player_restriction(plyr_list):
     print("These are the players that must be excluded: ", plyr_list)
 
 
+
+
+
+def test_filter(state, min_bud, max_bud, min_proj, max_proj, incl_plyrs, excl_plyrs):
+    conn = sqlite3.connect('football.sqlite')
+    cur = conn.cursor()
+
+    # select_statement = "SELECT * FROM current WHERE budget >= " + str(min_bud) 
+    # select_statement = "SELECT * FROM current WHERE budget <= " + str(max_bud) 
+    # select_statement = "SELECT * FROM current WHERE projection >= " + str(min_proj) 
+    # select_statement = "SELECT * FROM current WHERE projection <= " + str(max_proj) 
+    select_statement = "SELECT * FROM current WHERE projection <= " + str(max_proj + .01) 
+   
+    all_rosters = cur.execute(select_statement).fetchall()
+
+
+    if len(all_rosters) > 1:
+        cur.execute('DROP TABLE IF EXISTS current')
+        cur.execute('''
+        CREATE TABLE current (
+            
+            "qb" TEXT,
+            "rb1" TEXT,
+            "rb2" TEXT,
+            "wr1" TEXT,
+            "wr2" TEXT,
+            "wr3" TEXT,
+            "te" TEXT,
+            "fx" TEXT,
+            "dst" TEXT,
+            "budget" REAL,
+            "projection" REAL
+        )
+        ''')
+
+       
+        insert_records = "INSERT INTO current (qb, rb1, rb2, wr1, wr2, wr3, te, fx, dst, budget, projection) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        cur.executemany(insert_records, all_rosters)
+        conn.commit()
+
+        print(max_proj)
+
+    return []
+
+
+
+
+
+
 def implement_filter(state, min_bud, max_bud, min_proj, max_proj, incl_plyrs, excl_plyrs):
     conn = sqlite3.connect('football.sqlite')
     cur = conn.cursor()
@@ -161,7 +210,7 @@ def implement_filter(state, min_bud, max_bud, min_proj, max_proj, incl_plyrs, ex
     SELECT 
     qb, rb1, rb2, wr1, wr2, wr3, te, fx, dst, budget, projection 
     FROM current
-    WHERE budget >= '''  + str(min_bud) + ''' AND budget <= ''' + str(max_bud) + ''' AND projection >= ''' + str(min_proj) + ''' AND projection <= ''' + str(max_proj) + ''' 
+    WHERE budget >= '''  + str(min_bud) + ''' AND budget <= ''' + str(max_bud) + ''' AND projection >= ''' + str(min_proj) + ''' AND projection <= ''' + str(max_proj + .01) + ''' 
     '''
 
     if len(incl_plyrs) > 0:
@@ -287,7 +336,6 @@ def run_read():
             else:
                 print(player + " is already included.  Let's try this again...")
                 print("")
-
         elif user_input == "1":
             current_players = get_current_players(current_players)
             player = get_player_selection("exclude", current_players)

@@ -612,5 +612,5 @@ def clear_space(tables):
     print("Cleaning out the empty space in the database...")
     for table in tables:
         cur.execute('DROP TABLE IF EXISTS ' + table)
-        cur.execute('VACUUM')
+    cur.execute('VACUUM')
     print("The program has been ternminated")

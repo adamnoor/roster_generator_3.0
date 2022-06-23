@@ -3,6 +3,7 @@ from models import *
 import csv
 from itertools import combinations
 import os
+from datetime import datetime
 
 
 def get_all_players():
@@ -590,11 +591,14 @@ def min_max_restriction(type, min, max):
 def write_rosters_to_csv():
     conn = sqlite3.connect('football.sqlite')
     cur = conn.cursor()
+    now = str(datetime.now())
+    
+
     newpath = r'output_files' 
     if not os.path.exists(newpath):
         os.makedirs(newpath)
     cur.execute("SELECT * from current ORDER BY projection DESC")
-    path = "output_files/Final_Roster.csv"
+    path = "output_files/Final_Roster_" + str(now) + ".csv"
 
     with open(path, "w") as csv_file:
         csv_writer = csv.writer(csv_file, delimiter=",")

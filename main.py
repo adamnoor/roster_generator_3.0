@@ -1,6 +1,6 @@
 from operator import truediv
 import os.path
-from read_table import run_script
+from logic_read_db import run_read
 from logic_create_db import run_create
 
 
@@ -21,7 +21,8 @@ while x:
         if user_input == 1:
             x = run_create()
         elif user_input == 2:
-            x = run_script()
+            run_read()
+            x = False
         else:
             x = False
     

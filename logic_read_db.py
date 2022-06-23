@@ -41,6 +41,7 @@ def run_read():
             implement_filter("projection", min_budget, max_budget, min_projection, max_projection, included_players, excluded_players)
         elif user_input == "4":
             write_rosters_to_csv()
+            keep_running = False
             run_read()
         elif user_input == "5":
             keep_running = False

@@ -4,8 +4,8 @@ from logic_read_db import run_read
 from logic_create_db import run_create
 
 
-x = True
-while x:
+keep_running = True
+while keep_running:
     
     path = os.path.exists('football.sqlite')
 
@@ -19,12 +19,12 @@ while x:
         user_input = int(input("Make a selection: "))
 
         if user_input == 1:
-            x = run_create()
+            keep_running = run_create()
         elif user_input == 2:
             run_read()
-            x = False
+            keep_running = False
         else:
-            x = False
+            keep_running = False
     
     else:
-        x = run_create()
+        keep_running = run_create()

@@ -33,7 +33,7 @@ def get_all_projections(plyrs):
                 projection = row[2]
                 for element in plyrs:
                     if element.name == name:
-                        element.projection = float(projection)
+                        element.projection = round(float(projection), 2)
                         break
                     
             line_count += 1
@@ -498,7 +498,7 @@ def add_to_table(type, plyr_list):
     
 
 def implement_filter(state, min_bud, max_bud, min_proj, max_proj, incl_plyrs, excl_plyrs):
-    max_proj += .001
+    #max_proj += .001
     conn = sqlite3.connect('football.sqlite')
     cur = conn.cursor()
 

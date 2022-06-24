@@ -10,8 +10,8 @@ class QbDstCombo:
     def __init__(self, qb, dst):
         self.qb = qb
         self.dst = dst
-        self.salary = qb.salary + dst.salary
-        self.projection = qb.projection + dst.projection
+        self.salary = int(qb.salary + dst.salary)
+        self.projection = round(qb.projection + dst.projection, 2)
         
 class FlexCombo:
     def __init__(self, rb1, rb2, wr1, wr2, wr3, te, fx):
@@ -22,7 +22,7 @@ class FlexCombo:
         self.wr3 = wr3
         self.te = te
         self.fx = fx
-        self.salary = rb1.salary + rb2.salary + wr1.salary + wr2.salary + wr3.salary + te.salary + fx.salary
-        self.projection = rb1.projection + rb2.projection + wr1.projection + wr2.projection + wr3.projection + te.projection + fx.projection
+        self.salary = int(rb1.salary + rb2.salary + wr1.salary + wr2.salary + wr3.salary + te.salary + fx.salary)
+        self.projection = round(rb1.projection + rb2.projection + wr1.projection + wr2.projection + wr3.projection + te.projection + fx.projection, 2)
 
 

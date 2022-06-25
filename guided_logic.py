@@ -70,16 +70,13 @@ def set_excluded_players(included, all):
             all_players.append(element)
     for i, element in enumerate (all_players):
         print("Select " + str(i) + " to exclude " + element)
-    user_input = input("Select players to include (separate by comma): ")
+    user_input = input("Select players to exclude (separate by comma): ")
     players = []
     for element in user_input:
         if all_players[element] not in players:
             players.append(all_players[element])
 
     return players
-
-
-
 
 
 

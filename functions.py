@@ -238,8 +238,8 @@ def build_tables():
                 te, 
                 fx, 
                 dst,
-                qb_dst.budget + flex.budget AS budget,
-                qb_dst.projection + flex.projection AS projection
+                CAST(qb_dst.budget + flex.budget AS INT) AS budget,
+                ROUND(qb_dst.projection + flex.projection, 2) AS projection
             FROM flex 
             CROSS JOIN qb_dst
             WHERE qb_dst.budget + flex.budget <= 50000
@@ -247,56 +247,6 @@ def build_tables():
     print("All valid rosters have been written to the database.")
 
 
-def write_to_database(qb_dst_combos, flex_combos):
-    conn = sqlite3.connect('football.sqlite')
-    cur = conn.cursor()
-    player_map = {}
-    all_rosters = []
-    count = 0
-    for i in qb_dst_combos:
-        for j in flex_combos:
-            salary = i.salary + j.salary
-            projection = round(i.projection + j.projection, 2)
-            if salary > 50000:
-                print(str(count) + " valid rosters have been generated so far")
-                print(str(len(all_rosters)) + " valid rosters with the qb of " + i.qb.name + " and a defense/special teams of " + i.dst.name + " have been created and are being written to the database")
-
-                insert_records = "INSERT INTO rosters (qb, rb1, rb2, wr1, wr2, wr3, te, fx, dst, budget, projection) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-                               
-                cur.executemany(insert_records, all_rosters)
-                conn.commit()
-                
-                all_rosters = []
-                break
-            else:
-                count += 1
-                
-                roster = [i.qb.name, j.rb1.name, j.rb2.name, j.wr1.name, j.wr2.name, j.wr3.name, j.te.name, j.fx.name, i.dst.name, salary, projection]
-                
-
-                for element in roster:
-                    if element not in player_map:
-                        player_map[element] = 1
-                    else:
-                        player_map[element] += 1
-                all_rosters.append(roster)
-                if j == flex_combos[len(flex_combos)-1]:
-                    print(str(count) + " valid rosters have been generated so far")
-                    
-                    print(str(len(all_rosters)) + " valid rosters with the qb of " + i.qb.name + " and a defense/special teams of " + i.dst.name + " have been created and are being written to the database")
-                    
-                   
-                    insert_records = "INSERT INTO rosters (qb, rb1, rb2, wr1, wr2, wr3, te, fx, dst, budget, projection) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-                    
-                   
-                    cur.executemany(insert_records, all_rosters)
-                    conn.commit()
-                    
-                    all_rosters = []
-    print(str(count) + " valid rosters have been generated and written to the database")  
-    print("")
-
-    return [player_map, count]
 
 
 def tally_players(player_map, roster_tally):

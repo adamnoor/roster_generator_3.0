@@ -63,6 +63,7 @@ def set_included_players(qb, flex_array):
             players.append([element])
     return players
 
+
 def set_excluded_players(included, all):
     all_players = []
     for element in all:
@@ -77,11 +78,6 @@ def set_excluded_players(included, all):
             players.append([all_players[element]])
 
     return players
-
-
-    
-    
-
 
 
 def filter_array(incld, excld):
@@ -159,7 +155,7 @@ def run_guided():
     add_to_table("exclude", excluded_players)
     #write to excluded table
     print_rosters = True
-    print("Filtering players to exclude... ")
+    print("Filtering all of the excluded players... ")
     print("")
     
     for element in included_players:

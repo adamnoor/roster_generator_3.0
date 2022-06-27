@@ -2,7 +2,7 @@ from operator import truediv
 import os.path
 from logic_read_db import run_read
 from logic_create_db import run_create
-from guided_logic import run_guided
+from logic_guided import run_guided
 
 
 keep_running = True

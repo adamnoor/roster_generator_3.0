@@ -431,7 +431,7 @@ def get_player_selection(type, plyr_list):
 def add_to_table(type, plyr_list):
     conn = sqlite3.connect('football.sqlite')
     cur = conn.cursor()
-    print("Getting a list of players to " + type + "...")
+    # print("Getting a list of players to " + type + "...")
     cur.execute('DROP TABLE IF EXISTS ' + type +'d_players')
     cur.execute('''
     CREATE TABLE ''' + type +'''d_players (
@@ -444,15 +444,17 @@ def add_to_table(type, plyr_list):
     
     cur.executemany(insert_records, [plyr_list[len(plyr_list)-1]])
     conn.commit()
-    print("you are trying to " + type + " " + str(plyr_list[len(plyr_list)-1][0]))
+    #print("you are trying to " + type + " " + str(plyr_list[len(plyr_list)-1][0]))
     
 
 def implement_filter(state, min_bud, max_bud, min_proj, max_proj, incl_plyrs, excl_plyrs):
     #max_proj += .001
     conn = sqlite3.connect('football.sqlite')
     cur = conn.cursor()
+    
 
     select_statement = '''
+    
     SELECT 
     qb, rb1, rb2, wr1, wr2, wr3, te, fx, dst, budget, projection 
     FROM current
@@ -460,6 +462,7 @@ def implement_filter(state, min_bud, max_bud, min_proj, max_proj, incl_plyrs, ex
     '''
 
     if len(incl_plyrs) > 0:
+        
         select_statement = select_statement + '''AND EXISTS (
             SELECT name FROM included_players WHERE name = QB OR name = RB1 or name = RB2 or name = WR1 or name = WR2 or name = WR3 or name = TE or name = FX or name = DST) '''
 

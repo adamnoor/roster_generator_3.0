@@ -15,7 +15,7 @@ while keep_running:
         print("")
         print("Select 1 to rewrite the table")
         print("Select 2 to use the existing table to build a stack")
-        print("Select 3 to use this exising table to build a guided stack")
+        print("Select 3 to use this existing table to build a guided stack")
         print("Select 4 to quit the script")
         print("")
         user_input = int(input("Make a selection: "))

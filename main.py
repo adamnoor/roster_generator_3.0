@@ -109,7 +109,7 @@ def build_stack():
             add_to_table("include", temp)
             print_rosters = filter_array(temp, [], budget_max, budget_min, projection_max, projection_min)
         else:
-            #get_all_players_new()
+            get_all_players_new()
             break
 
     if print_rosters:

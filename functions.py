@@ -235,7 +235,7 @@ def run_create_new():
     # output_line1_var.set("The program has taken " + get_time(start, end) + " seconds to complete")
     # output_line2_var.set(find_zero_projection_new(all_players))
     # print(budget_min_entry)
-    # get_all_players_new()
+    get_all_players_new()
     end = time.time()
     # print("The program has taken " + get_time(start, end) + " seconds to write " + str(get_count()) + " valid rosters to the database")
     return ["The program has taken " + get_time(start, end) + " seconds to write all valid rosters to the database", find_zero_projection_new()]

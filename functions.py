@@ -246,9 +246,13 @@ def find_zero_projection_new():
     lcl_str = ""
     lcl_str = lcl_str + "The following players are on the players.csv file but cannot be found on the projections.csv file\n"
     print("")
+    count = 0
     for player in all_players:
         if player.projection == 0:
-            lcl_str = lcl_str + player.name + "\n"
+            count += 1
+            if count % 5 == 1:
+                lcl_str = lcl_str + "\n"
+            lcl_str = lcl_str + player.name + ", "
 
     return lcl_str
 

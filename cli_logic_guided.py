@@ -1,4 +1,5 @@
-from functions import *
+from cli_functions import *
+
 
 def get_position(position):
     conn = sqlite3.connect('football.sqlite')
@@ -10,6 +11,7 @@ def get_position(position):
         players.append(element[0])
     
     return players
+
 
 def get_flex():
     conn = sqlite3.connect('football.sqlite')
@@ -39,6 +41,7 @@ def get_flex():
     
     
     return players
+
 
 def get_player_array(plyr_list):
     for i, element in enumerate (plyr_list):
@@ -123,7 +126,6 @@ def filter_array(incl_plyrs, excl_plyrs):
         )
         ''')
 
-       
         insert_records = "INSERT INTO current (qb, rb1, rb2, wr1, wr2, wr3, te, fx, dst, budget, projection) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         cur.executemany(insert_records, all_rosters)
         conn.commit()

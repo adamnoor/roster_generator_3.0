@@ -1,6 +1,5 @@
 import time
-from models import *
-from functions import *
+from cli_functions import *
 
 
 def run_create():

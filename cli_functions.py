@@ -4,8 +4,7 @@ import csv
 from itertools import combinations
 import os
 from datetime import datetime
-import time
-import os
+
 
 def get_all_players():
     plyrs = []
@@ -20,7 +19,7 @@ def get_all_players():
                 salary = int(row[2])
                 player = Player(name, id, position, salary)
                 plyrs.append(player)
-            line_count += 1
+            line_count += 1    
     return plyrs
 
 
@@ -36,11 +35,10 @@ def get_all_projections(plyrs):
                     if element.name == name:
                         element.projection = round(float(projection), 2)
                         break
-
+                    
             line_count += 1
-
+    
     return plyrs
-
 
 def set_postions(position, plyrs):
     lcl_array = []
@@ -48,6 +46,7 @@ def set_postions(position, plyrs):
         if element.position == position:
             lcl_array.append(element)
     return lcl_array
+
 
 
 def find_zero_projection(plyrs):
@@ -64,50 +63,49 @@ def find_zero_projection(plyrs):
     return int(input("Enter Selection: "))
 
 
+
+
 def set_flex_max_2(bgt, qbs, dst):
     flex_max = bgt - (min(qbs, key=lambda x: x.salary).salary + min
     (dst, key=lambda x: x.salary).salary)
 
     return flex_max
 
-
 def set_qb_dst_combos(qbs, dst):
     qb_dst_combos = []
     for qb in qbs:
         for ds in dst:
             qb_dst_combos.append(QbDstCombo(qb, ds))
-
-    return sorted(qb_dst_combos, key=lambda x: x.salary)
+    
+    return sorted(qb_dst_combos, key=lambda x: x.salary)    
 
 
 def set_flex_max(bdgt, qb_dst):
     return bdgt - min(qb_dst, key=lambda x: x.salary).salary
 
-
 def set_flex_combos(plyrs, num):
+    
     return list(combinations(plyrs, num))
 
-
 def sort_one(list):
-    return sorted(list, key=lambda x: x.salary)
-
+    return  sorted(list, key=lambda x: x.salary)
 
 def sort_two(list):
-    return sorted(list, key=lambda x: x[0].salary + x[1].salary)
-
+    return  sorted(list, key=lambda x: x[0].salary + x[1].salary)
 
 def sort_three(list):
-    return sorted(list, key=lambda x: x[0].salary + x[1].salary + x[2].salary)
-
+    return  sorted(list, key=lambda x: x[0].salary + x[1].salary + x[2].salary)
 
 def sort_four(list):
-    return sorted(list, key=lambda x: x[0].salary + x[1].salary + x[2].salary + x[3].salary)
+    return  sorted(list, key=lambda x: x[0].salary + x[1].salary + x[2].salary + x[3].salary)
+
+
 
 
 def max_combos(qb_dst, rb2, rb3, wr3, wr4, te, te2):
     print("Done calculating the necessary combinations needed to create all of the rosters")
     print("")
-
+   
     value = len(qb_dst) * len(rb2) * len(wr3) * len(te2)
     value += len(qb_dst) * len(rb3) * len(wr3) * len(te)
     value += len(qb_dst) * len(rb2) * len(wr4) * len(te)
@@ -119,11 +117,9 @@ def max_combos(qb_dst, rb2, rb3, wr3, wr4, te, te2):
     print("")
     return int(input("Enter Selection: "))
 
-
-def create_all_flex_combos(two_rb_combos, three_wr_combos, two_te_combos, three_rb_combos, tight_ends, four_wr_combos,
-                           flex_max):
+def create_all_flex_combos(two_rb_combos, three_wr_combos, two_te_combos, three_rb_combos, tight_ends, four_wr_combos, flex_max):
     flex_combos = []
-
+   
     count = 0
     print("")
     print("Creating flex combinations...")
@@ -131,9 +127,8 @@ def create_all_flex_combos(two_rb_combos, three_wr_combos, two_te_combos, three_
     for rb in two_rb_combos:
         for wr in three_wr_combos:
             for te in two_te_combos:
-
-                salary = rb[0].salary + rb[1].salary + wr[0].salary + wr[1].salary + wr[2].salary + te[0].salary + te[
-                    1].salary
+                
+                salary = rb[0].salary + rb[1].salary + wr[0].salary + wr[1].salary + wr[2].salary + te[0].salary + te[1].salary
                 if salary <= flex_max:
                     if count >= 1000000 and count % 1000000 == 0:
                         print(str(count) + " two te flex combinations have been created.")
@@ -145,9 +140,8 @@ def create_all_flex_combos(two_rb_combos, three_wr_combos, two_te_combos, three_
     count = 0
     for rb in three_rb_combos:
         for wr in three_wr_combos:
-            for te in tight_ends:
-                salary = rb[0].salary + rb[1].salary + wr[0].salary + wr[1].salary + wr[2].salary + te.salary + rb[
-                    2].salary
+            for te in tight_ends:    
+                salary = rb[0].salary + rb[1].salary + wr[0].salary + wr[1].salary + wr[2].salary + te.salary + rb[2].salary
                 if salary <= flex_max:
                     count += 1
                     if count >= 1000000 and count % 1000000 == 0:
@@ -160,15 +154,14 @@ def create_all_flex_combos(two_rb_combos, three_wr_combos, two_te_combos, three_
     for rb in two_rb_combos:
         for wr in four_wr_combos:
             for te in tight_ends:
-
-                salary = rb[0].salary + rb[1].salary + wr[0].salary + wr[1].salary + wr[2].salary + te.salary + wr[
-                    3].salary
+                
+                salary = rb[0].salary + rb[1].salary + wr[0].salary + wr[1].salary + wr[2].salary + te.salary + wr[3].salary
                 if salary <= flex_max:
                     count += 1
                     if count >= 1000000 and count % 1000000 == 0:
                         print(str(count) + " four wr flex combinations have been created.")
-
-                    flex_combos.append(FlexCombo(rb[0], rb[1], wr[0], wr[1], wr[2], te, wr[3]))
+                    
+                    flex_combos.append(FlexCombo(rb[0], rb[1], wr[0], wr[1], wr[2], te, wr[3]))  
                 else:
                     break
 
@@ -176,126 +169,16 @@ def create_all_flex_combos(two_rb_combos, three_wr_combos, two_te_combos, three_
     count = 0
 
     print("Sorting " + str(len(flex_combos)) + " combinations.  This may take some time...")
-
+    
     flex_combos = sorted(flex_combos, key=lambda x: x.salary)
 
     print("")
     print("Done Sorting")
-
+   
     print("Generating valid rosters...")
 
     return flex_combos
 
-def run_create_new():
-    start = time.time()
-    all_players = get_all_players()
-    all_players = get_all_projections(all_players)
-    wide_receivers = set_postions("WR", all_players)
-    runningbacks = set_postions("RB", all_players)
-    quarterbacks = set_postions("QB", all_players)
-    tight_ends = set_postions("TE", all_players)
-    defenses = set_postions("DST", all_players)
-    qb_dst_combos = set_qb_dst_combos(quarterbacks, defenses)
-    budget = 50000
-    flex_max = set_flex_max(budget, qb_dst_combos)
-    two_rb_combos = set_flex_combos(runningbacks, 2)
-    three_rb_combos = set_flex_combos(runningbacks, 3)
-    three_wr_combos = set_flex_combos(wide_receivers, 3)
-    four_wr_combos = set_flex_combos(wide_receivers, 4)
-    two_te_combos = set_flex_combos(tight_ends, 2)
-    print("Sorting positional combinations...")
-    print("")
-    two_rb_combos = sort_two(two_rb_combos)
-    three_rb_combos = sort_three(three_rb_combos)
-    three_wr_combos = sort_three(three_wr_combos)
-    four_wr_combos = sort_four(four_wr_combos)
-    two_te_combos = sort_two(two_te_combos)
-    tight_ends = sort_one(tight_ends)
-    print("Finished sorting positional combinations.")
-    print("")
-    flex_combo_end = time.time()
-    runtime = get_time(start, flex_combo_end)
-    print("The program has taken " + runtime + " seconds to sort all of the positional combinations")
-    print("")
-    print("Building the valid flex combinations...")
-    print("")
-    flex_combos = create_all_flex_combos(two_rb_combos, three_wr_combos, two_te_combos, three_rb_combos, tight_ends,
-                                         four_wr_combos, flex_max)
-    flex_combo_end = time.time()
-    runtime = get_time(start, flex_combo_end)
-    print(
-        "The program has taken " + runtime + " seconds to build all of the flex combinations and write them to the database")
-    print("")
-    print("Building all valid rosters and writing them to the database.  This may take some time...")
-    write_combos(qb_dst_combos, flex_combos)
-    build_tables()
-    clear_space(["qb_dst", "flex"])
-    end = time.time()
-    print("")
-    print("Finished building all of the valid rosters and writing them to the database.")
-    print("The program has taken " + get_time(start, end) + " seconds to write " + str(get_count()) + " valid rosters to the database")
-    # output_line1_var.set("The program has taken " + get_time(start, end) + " seconds to complete")
-    # output_line2_var.set(find_zero_projection_new(all_players))
-    # print(budget_min_entry)
-    get_all_players_new()
-    return ["The program has taken " + get_time(start, end) + " seconds to write " + str(get_count()) + " valid rosters to the database", find_zero_projection_new()]
-
-def find_zero_projection_new():
-    all_players = get_all_players()
-    all_players = get_all_projections(all_players)
-    lcl_str = ""
-    lcl_str = lcl_str + "The following players are on the players.csv file but cannot be found on the projections.csv file\n"
-    print("")
-    for player in all_players:
-        if player.projection == 0:
-            lcl_str = lcl_str + player.name + "\n"
-
-    return lcl_str
-
-def check_current_table():
-    path = os.path.exists('football.sqlite')
-
-    if path:
-        conn = sqlite3.connect('football.sqlite')
-        c = conn.cursor()
-
-        # get the count of tables with the name
-        c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='current' ''')
-        if c.fetchone()[0] == 1:
-            return True
-        else:
-            return False
-    else:
-        return False
-
-
-def output_opening(table_check):
-    if table_check:
-        return "Ready to build a stack"
-    else:
-        return "Must create rosters to build a stack"
-
-
-def output_players(table_check):
-    if table_check:
-        return get_all_players_new()
-    else:
-        return ""
-
-
-
-
-def get_all_players_new():
-
-    initialize_current_table()
-    all_players = get_players_new()
-    lcl_str = "These are the players to include/exclude from your stack:\n\n"
-    for i in range(len(all_players)):
-        if i%5 == 1 and i >= 5:
-            lcl_str = lcl_str + "\n"
-        lcl_str = lcl_str + str(i) + ") " + all_players[i] + "       "
-    print("The local table has been initialized.  Ready to build a stack")
-    return lcl_str
 
 def write_combos(qb_dst, flex):
     qb_dst_array = []
@@ -333,11 +216,10 @@ def write_combos(qb_dst, flex):
     ''')
     insert_records = "INSERT INTO flex (rb1, rb2, wr1, wr2, wr3, te, fx, budget, projection) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)"
     for element in flex:
-        flex_array.append(
-            [element.rb1.name, element.rb2.name, element.wr1.name, element.wr2.name, element.wr3.name, element.te.name,
-             element.fx.name, element.salary, element.projection])
+        flex_array.append([element.rb1.name, element.rb2.name, element.wr1.name, element.wr2.name, element.wr3.name, element.te.name, element.fx.name, element.salary, element.projection])
     cur.executemany(insert_records, flex_array)
     conn.commit()
+
 
 
 def build_tables():
@@ -365,14 +247,19 @@ def build_tables():
     print("All valid rosters have been written to the database.")
 
 
+
+
 def tally_players(player_map, roster_tally):
+
+    
     players = {}
     projections = {}
     salary = {}
-
+    
+   
     print("")
     print("Creating CSV files showing a breakdown of the data")
-
+    
     for element in player_map:
         if isinstance(element, str):
             players[element] = player_map[element]
@@ -380,24 +267,23 @@ def tally_players(player_map, roster_tally):
             salary[element] = player_map[element]
         else:
             projections[element] = player_map[element]
-
-    player_keys = sorted(players)
+    
+    player_keys = sorted (players)
     salary_keys = sorted(salary)
     proj_keys = sorted(projections)
     player_data = []
     salary_data = []
     proj_data = []
-
+    
     for element in player_keys:
-        player_data.append([element, players[element], round(float(players[element]) / float(roster_tally) * 100, 2)])
-
+        player_data.append([element, players[element], round(float(players[element])/float(roster_tally) * 100, 2)])
+    
     for element in salary_keys:
-        salary_data.append([element, salary[element], round(float(salary[element]) / float(roster_tally) * 100, 4)])
-
+        salary_data.append([element, salary[element], round(float(salary[element])/float(roster_tally) * 100, 4)])
+    
     for element in proj_keys:
-        proj_data.append(
-            [element, projections[element], round(float(projections[element]) / float(roster_tally) * 100, 4)])
-
+        proj_data.append([element, projections[element], round(float(projections[element])/float(roster_tally) * 100, 4)])
+    
     player_data_sorted = sorted(player_data, key=lambda x: x[0])
     salary_data_sorted = sorted(salary_data, key=lambda x: x[2], reverse=True)
     proj_data_sorted = sorted(proj_data, key=lambda x: x[0], reverse=True)
@@ -410,7 +296,7 @@ def tally_players(player_map, roster_tally):
 
         # write multiple rows
         writer.writerows(player_data_sorted)
-
+    
     with open('generated_files/salary_breakdown.csv', 'w') as f:
         writer = csv.writer(f)
 
@@ -430,15 +316,16 @@ def tally_players(player_map, roster_tally):
     print("")
     print("Finished creating CSV files showing a breakdown of the data")
 
-
 def get_time(start, end):
     return str(round(end - start, 2))
+
+
 
 
 def initialize_current_table():
     conn = sqlite3.connect('football.sqlite')
     cur = conn.cursor()
-
+    
     print("")
     print("Initializing a local table.  This may take some time...")
     cur.execute('DROP TABLE IF EXISTS current')
@@ -455,6 +342,7 @@ def initialize_current_table():
         "name" TEXT
     )
     ''')
+
 
 
 def get_current_players(player_list):
@@ -483,8 +371,8 @@ def get_current_players(player_list):
 
     for element in player_objects:
         players.append(element[0])
-
-    if len(players) > 0:
+    
+    if len(players)>0:
         return players
     else:
         return player_list
@@ -501,10 +389,11 @@ def get_min_max_value(type, field):
         return int(value)
 
 
+
 def get_count():
     conn = sqlite3.connect('football.sqlite')
     cur = conn.cursor()
-    select_statement = "SELECT COUNT(*) FROM current "
+    select_statement = "SELECT COUNT(*) FROM current " 
     return int(cur.execute(select_statement).fetchall()[0][0])
 
 
@@ -529,41 +418,12 @@ def get_user_choice(min_proj, max_proj, min_budg, max_budg, count):
     return (str(input("Select an option: ")))
 
 
-def get_players_new():
-    conn = sqlite3.connect('football.sqlite')
-    cur = conn.cursor()
-    players = []
-    player_objects = cur.execute('''
-        SELECT DISTINCT qb FROM current
-            UNION 
-        SELECT DISTINCT rb1 FROM current
-            UNION 
-        SELECT DISTINCT rb2 FROM current
-            UNION 
-        SELECT DISTINCT wr1 FROM current
-            UNION 
-        SELECT DISTINCT wr2 FROM current
-            UNION 
-        SELECT DISTINCT wr3 FROM current
-            UNION 
-        SELECT DISTINCT te FROM current
-            UNION 
-        SELECT DISTINCT fx FROM current
-            UNION 
-        SELECT DISTINCT dst FROM current
-    ''')
-
-    for element in player_objects:
-        players.append(element[0])
-
-    return players
-
-
 
 def get_player_selection(type, plyr_list):
-    for i, element in enumerate(plyr_list):
-        print("Select " + str(i) + " to " + type + " " + element)
 
+    for i, element in enumerate (plyr_list):
+        print("Select " + str(i) + " to " + type + " " + element)
+    
     user_input = int(input("Select a player to " + type + ": "))
     return plyr_list[user_input]
 
@@ -572,52 +432,54 @@ def add_to_table(type, plyr_list):
     conn = sqlite3.connect('football.sqlite')
     cur = conn.cursor()
     # print("Getting a list of players to " + type + "...")
-    cur.execute('DROP TABLE IF EXISTS ' + type + 'd_players')
+    cur.execute('DROP TABLE IF EXISTS ' + type +'d_players')
     cur.execute('''
-    CREATE TABLE ''' + type + '''d_players (
-
+    CREATE TABLE ''' + type +'''d_players (
+        
         "name" TEXT
     )
     ''')
 
     insert_records = "INSERT INTO " + type + "d_players (name) VALUES(?)"
-
-    cur.executemany(insert_records, [plyr_list[len(plyr_list) - 1]])
+    
+    cur.executemany(insert_records, [plyr_list[len(plyr_list)-1]])
     conn.commit()
-    # print("you are trying to " + type + " " + str(plyr_list[len(plyr_list)-1][0]))
-
+    #print("you are trying to " + type + " " + str(plyr_list[len(plyr_list)-1][0]))
+    
 
 def implement_filter(state, min_bud, max_bud, min_proj, max_proj, incl_plyrs, excl_plyrs):
-    # max_proj += .001
+    #max_proj += .001
     conn = sqlite3.connect('football.sqlite')
     cur = conn.cursor()
+    
 
     select_statement = '''
-
+    
     SELECT 
     qb, rb1, rb2, wr1, wr2, wr3, te, fx, dst, budget, projection 
     FROM current
-    WHERE budget >= ''' + str(min_bud) + ''' AND budget <= ''' + str(max_bud) + ''' AND projection >= ''' + str(
-        min_proj) + ''' AND projection <= ''' + str(max_proj) + ''' 
+    WHERE budget >= '''  + str(min_bud) + ''' AND budget <= ''' + str(max_bud) + ''' AND projection >= ''' + str(min_proj) + ''' AND projection <= ''' + str(max_proj) + ''' 
     '''
 
     if len(incl_plyrs) > 0:
+        
         select_statement = select_statement + '''AND EXISTS (
             SELECT name FROM included_players WHERE name = QB OR name = RB1 or name = RB2 or name = WR1 or name = WR2 or name = WR3 or name = TE or name = FX or name = DST) '''
 
     if len(excl_plyrs) > 0:
         select_statement = select_statement + '''AND NOT EXISTS (
             SELECT name FROM excluded_players WHERE name = QB OR name = RB1 or name = RB2 or name = WR1 or name = WR2 or name = WR3 or name = TE or name = FX or name = DST) '''
+    
 
     select_statement = "WITH t AS (" + select_statement + ") SELECT qb, rb1, rb2, wr1, wr2, wr3, te, fx, dst, budget, projection FROM t"
-
+   
     all_rosters = cur.execute(select_statement).fetchall()
 
     if len(all_rosters) > 1:
         cur.execute('DROP TABLE IF EXISTS current')
         cur.execute('''
         CREATE TABLE current (
-
+            
             "qb" TEXT,
             "rb1" TEXT,
             "rb2" TEXT,
@@ -632,10 +494,11 @@ def implement_filter(state, min_bud, max_bud, min_proj, max_proj, incl_plyrs, ex
         )
         ''')
 
+       
         insert_records = "INSERT INTO current (qb, rb1, rb2, wr1, wr2, wr3, te, fx, dst, budget, projection) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         cur.executemany(insert_records, all_rosters)
         conn.commit()
-
+       
         if len(incl_plyrs) > 0:
             print("The following players have been included on all rosters:")
             for element in incl_plyrs:
@@ -652,7 +515,7 @@ def implement_filter(state, min_bud, max_bud, min_proj, max_proj, incl_plyrs, ex
         if state == "exclude":
             excl_plyrs.pop()
         print("This restriction doesn't yield any rosters.  Try again.")
-
+    
     if state == "include":
         return incl_plyrs
     elif state == "exclude":
@@ -660,13 +523,12 @@ def implement_filter(state, min_bud, max_bud, min_proj, max_proj, incl_plyrs, ex
     else:
         return None
 
-
 def already_included_message(plyr):
     print(plyr + " is already included.  Let's try this again...")
     print("")
 
-
 def min_max_restriction(type, min, max):
+    
     print("")
     print("Currently the " + type + " min is " + str(min))
     user_input = int(input("Set the new min " + type + ": "))
@@ -683,8 +545,9 @@ def write_rosters_to_csv():
     conn = sqlite3.connect('football.sqlite')
     cur = conn.cursor()
     now = str(datetime.now())
+    
 
-    newpath = r'output_files'
+    newpath = r'output_files' 
     if not os.path.exists(newpath):
         os.makedirs(newpath)
     cur.execute("SELECT * from current ORDER BY projection DESC")
@@ -695,7 +558,7 @@ def write_rosters_to_csv():
         csv_writer.writerow([i[0] for i in cur.description])
         csv_writer.writerows(cur)
 
-
+        
 def clear_space(tables):
     conn = sqlite3.connect('football.sqlite')
     cur = conn.cursor()

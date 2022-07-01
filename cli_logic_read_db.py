@@ -1,4 +1,5 @@
-from functions import *
+from cli_functions import *
+
 
 def run_read():
     initialize_current_table()

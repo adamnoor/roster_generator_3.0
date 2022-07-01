@@ -5,7 +5,7 @@ from functions import *
 
 root = Tk()
 root.title('Stack Generator')
-root.geometry("1200x1000")
+root.geometry("1800x1800")
 is_player_var = StringVar()
 output_line1_var = StringVar()
 output_line2_var = StringVar()

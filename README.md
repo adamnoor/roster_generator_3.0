@@ -14,3 +14,9 @@ https://docs.google.com/document/d/1333TFeV7DedCE99hIfSmBQojP7wf0ZTLO55LheLRMIk/
 For a detailed user journey check out:
 
 https://docs.google.com/document/d/134FuRuBOJXWAUk5J5-P_wciMgdcBIPbb0f8prihRWmU/edit?usp=sharing
+
+
+This is a link to create a copy of the google sheet this script will be using:
+
+https://docs.google.com/spreadsheets/d/1uMjkEcdyXi2kESgNFzZbOxPOtWsVLEnL-eanzzgX5vc/copy
+
